@@ -1,0 +1,163 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "counters": {
+      ".read": false,
+      ".write": false
+    },
+
+    "institutionApplications": {
+      ".read": "auth != null && auth.token.role === 'super_admin'",
+      "$applicationId": {
+        ".read": "auth != null && auth.token.role === 'super_admin'",
+        ".write": "(auth != null && auth.token.role === 'super_admin') || (!data.exists() && newData.exists() && newData.child('status').val() === 'pending' && newData.hasChildren(['id', 'institutionName', 'type', 'eiin', 'address', 'district', 'phone', 'email', 'principalName', 'status', 'createdAt']) && !newData.hasChild('password') && !newData.hasChild('passwordHash'))"
+      }
+    },
+
+    "users": {
+      ".read": "auth != null && auth.token.role === 'super_admin'",
+      ".write": false,
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth.token.role === 'super_admin' || (auth.token.role === 'principal' && data.child('institutionCode').val() === auth.token.institutionCode))",
+        ".write": false
+      }
+    },
+
+    "institutions": {
+      ".read": "auth != null && auth.token.role === 'super_admin'",
+      "$code": {
+        ".read": "auth != null && (auth.token.role === 'super_admin' || auth.token.institutionCode === $code)",
+        "meta": {
+          ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+        },
+        "settings": {
+          ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+        },
+        "academicYears": {
+          ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+        }
+      }
+    },
+
+    "data": {
+      "$code": {
+        "$year": {
+          "classes": {
+            ".read": "auth != null && (auth.token.role === 'super_admin' || auth.token.institutionCode === $code)",
+            ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+          },
+          "sections": {
+            ".read": "auth != null && (auth.token.role === 'super_admin' || auth.token.institutionCode === $code)",
+            ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+          },
+          "subjects": {
+            ".read": "auth != null && (auth.token.role === 'super_admin' || auth.token.institutionCode === $code)",
+            ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+          },
+          "teacherAssignments": {
+            ".read": "auth != null && (auth.token.role === 'super_admin' || auth.token.institutionCode === $code)",
+            ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+          },
+          "teacherSubjectAccess": {
+            "$teacherUid": {
+              ".read": "auth != null && (auth.token.role === 'super_admin' || (auth.token.institutionCode === $code && (auth.token.role === 'principal' || auth.uid === $teacherUid)))",
+              ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+            }
+          },
+          "students": {
+            ".read": "auth != null && (auth.token.role === 'super_admin' || (auth.token.institutionCode === $code && (auth.token.role === 'principal' || auth.token.role === 'teacher')))",
+            "$studentId": {
+              ".read": "auth != null && (auth.token.role === 'super_admin' || (auth.token.institutionCode === $code && (auth.token.role === 'principal' || auth.token.role === 'teacher' || data.child('uid').val() === auth.uid || root.child('data/' + $code + '/' + $year + '/parentLinks/' + auth.uid + '/' + $studentId).val() === true)))",
+              ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+            }
+          },
+          "parentLinks": {
+            "$parentUid": {
+              ".read": "auth != null && (auth.token.role === 'super_admin' || (auth.token.institutionCode === $code && (auth.token.role === 'principal' || auth.uid === $parentUid)))",
+              ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+            }
+          },
+          "exams": {
+            ".read": "auth != null && (auth.token.role === 'super_admin' || auth.token.institutionCode === $code)",
+            ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+          },
+          "examRules": {
+            ".read": "auth != null && (auth.token.role === 'super_admin' || auth.token.institutionCode === $code)",
+            ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+          },
+          "subjectCombinations": {
+            ".read": "auth != null && (auth.token.role === 'super_admin' || auth.token.institutionCode === $code)",
+            ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+          },
+          "resultPublications": {
+            ".read": "auth != null && (auth.token.role === 'super_admin' || auth.token.institutionCode === $code)",
+            ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+          },
+          "marks": {
+            "$examId": {
+              "$classId": {
+                "$sectionId": {
+                  "$subjectId": {
+                    ".read": "auth != null && (auth.token.role === 'super_admin' || (auth.token.institutionCode === $code && (auth.token.role === 'principal' || (auth.token.role === 'teacher' && (root.child('data/' + $code + '/' + $year + '/teacherSubjectAccess/' + auth.uid + '/' + $classId + '_' + $sectionId + '_' + $subjectId).val() === true || root.child('data/' + $code + '/' + $year + '/teacherSubjectAccess/' + auth.uid + '/' + $classId + '_all_' + $subjectId).val() === true)))))",
+                    "$studentId": {
+                      ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code) || (auth.token.role === 'teacher' && auth.token.institutionCode === $code && (root.child('data/' + $code + '/' + $year + '/teacherSubjectAccess/' + auth.uid + '/' + $classId + '_' + $sectionId + '_' + $subjectId).val() === true || root.child('data/' + $code + '/' + $year + '/teacherSubjectAccess/' + auth.uid + '/' + $classId + '_all_' + $subjectId).val() === true) && data.child('status').val() !== 'approved' && (newData.child('status').val() === 'draft' || newData.child('status').val() === 'submitted')))"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "publishedResults": {
+            "$studentUid": {
+              "$examId": {
+                ".read": "auth != null && (auth.token.role === 'super_admin' || (auth.token.institutionCode === $code && (auth.token.role === 'principal' || (auth.uid === $studentUid && root.child('data/' + $code + '/' + $year + '/resultPublications/' + $examId + '/' + data.child('sectionId').val() + '/published').val() === true) || (auth.token.role === 'parent' && root.child('data/' + $code + '/' + $year + '/parentLinks/' + auth.uid + '/' + data.child('studentId').val()).val() === true && root.child('data/' + $code + '/' + $year + '/resultPublications/' + $examId + '/' + data.child('sectionId').val() + '/published').val() === true))))",
+                ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))"
+              }
+            }
+          },
+          "assignments": {
+            ".read": "auth != null && (auth.token.role === 'super_admin' || auth.token.institutionCode === $code)",
+            "$assignmentId": {
+              ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.institutionCode === $code && (auth.token.role === 'principal' || (auth.token.role === 'teacher' && (!data.exists() || data.child('teacherUid').val() === auth.uid) && newData.child('teacherUid').val() === auth.uid))))"
+            }
+          },
+          "submissions": {
+            "$assignmentId": {
+              "$studentUid": {
+                ".read": "auth != null && (auth.token.role === 'super_admin' || (auth.token.institutionCode === $code && (auth.token.role === 'principal' || auth.token.role === 'teacher' || auth.uid === $studentUid || (auth.token.role === 'parent' && root.child('data/' + $code + '/' + $year + '/parentLinks/' + auth.uid + '/' + data.child('studentId').val()).val() === true))))",
+                ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.institutionCode === $code && (auth.token.role === 'principal' || auth.token.role === 'teacher' || (auth.token.role === 'student' && auth.uid === $studentUid && newData.child('studentUid').val() === auth.uid))))"
+              }
+            }
+          },
+          "notices": {
+            ".read": "auth != null && (auth.token.role === 'super_admin' || auth.token.institutionCode === $code)",
+            "$noticeId": {
+              ".write": "auth != null && (auth.token.role === 'super_admin' || (auth.token.institutionCode === $code && (auth.token.role === 'principal' || (auth.token.role === 'teacher' && newData.child('audience').val() === 'students'))))"
+            }
+          },
+          "auditLogs": {
+            ".read": "auth != null && (auth.token.role === 'super_admin' || (auth.token.role === 'principal' && auth.token.institutionCode === $code))",
+            "$logId": {
+              ".write": "auth != null && (auth.token.role === 'super_admin' || auth.token.institutionCode === $code) && !data.exists()"
+            }
+          }
+        }
+      }
+    },
+
+    "platform": {
+      "notices": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.token.role === 'super_admin'"
+      },
+      "auditLogs": {
+        ".read": "auth != null && auth.token.role === 'super_admin'",
+        "$logId": {
+          ".write": "auth != null && auth.token.role === 'super_admin' && !data.exists()"
+        }
+      }
+    }
+  }
+}

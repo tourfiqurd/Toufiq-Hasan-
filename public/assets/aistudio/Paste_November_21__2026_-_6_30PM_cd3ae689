@@ -1,0 +1,366 @@
+Academia LMS: Complete Page, Dashboard & Design Specification
+Version 1 · 21 November 2026 · Covers every public page and all four dashboards: what goes where, text, images, backgrounds, gradients, icons, sections and animation.
+1. Visual system (applies to every page)
+1.1 Colour palette
+Name
+Hex
+Where it is used
+Midnight Navy
+#0B1437
+Sidebar base, footer, hero base, dark text on light buttons
+Royal Indigo
+#4F46E5
+Primary buttons, links, active states, focus of selection
+Violet
+#7C3AED
+Middle of the brand gradient, hero glow
+Teal
+#14B8A6
+End of the brand gradient, success, secondary accent
+Amber
+#F59E0B
+Keyboard focus ring, badges, award highlights (#FCD34D on dark for GPA)
+Cloud
+#F4F6FC
+Page background (light mode)
+Surface
+#FFFFFF
+Cards, forms, tables, top bar
+Ink
+#111936
+Body text (light mode)
+Slate
+#5D6785
+Muted text, helper text
+Border
+#E2E6F3
+Card and input borders
+Success / Warning / Danger / Info
+#16A34A / #D97706 / #DC2626 / #0EA5E9
+Pass, pending, fail or reject, notices
+Dark mode: background #0B1020, surface #141B34, text #E8ECFB, muted #98A2C7, border #262F52. Brand colours stay the same. The user can switch with the 🌓 button; the default follows the device setting.
+1.2 Gradients
+Gradient
+Definition
+Used on
+Brand
+120°: #4F46E5 → #7C3AED (45%) → #14B8A6
+Primary buttons, icon tiles, active sidebar item, stats band, headline underline bars
+Hero
+135°: #0B1437 → #2A1A73 (55%) → #0B6B73, background-size 200%, slowly drifting
+Home hero, page headers of About, Login and Register
+Sidebar
+180°: #0B1437 → #1B1A5C (60%) → #0B4F5C
+Dashboard left sidebar
+Warm accent
+90°: #F59E0B → #F97316
+Single highlight per page: “Approved” seal, final call-to-action ribbon
+Glass
+rgba(255,255,255,.12) fill, 1px rgba(255,255,255,.25) border, 16px backdrop blur
+Floating result card, login panel over the hero
+Soft tint
+Indigo at 10–12% opacity
+Selected radio cards, table headers, hover rows
+1.3 Typography
+• One family: Hind Siliguri (Bangla and Latin look consistent). Fallback: system-ui, sans-serif.
+• Scale: H1 clamp(2rem, 5vw, 3.4rem) / 1.2, weight 700. H2 2rem, 700. H3 1.2rem, 600. Body 1rem / 1.6, 400. Small 0.85rem. Buttons 600.
+• Keep paragraphs under about 34 em wide. Left-align everything except the final call-to-action and the stats band.
+• Numbers: a setting switches between Bangla (১২৩) and English (123) numerals everywhere, including GPA and tables.
+1.4 Icons
+• Prototype uses emoji; production should use one line-icon set (Lucide), 24px, stroke 1.75.
+• Every feature icon sits in a 46px tile with 13px radius filled with the Brand gradient and white glyph. Sidebar icons are bare 24px glyphs, white at 80% opacity, 100% when active.
+• Icon map: Institutions 🏫, Users 👥, Notices 📢, Audit 🛡️, Classes 📚, Teachers 👩‍🏫, Students 🎓, Exams 📝, Marks ✍️, Approval ✅, Tabulation 🧮, Settings ⚙️, Assignments 📎, Admit card 🪪, Academic year 🗓️.
+1.5 Shape, depth and spacing
+• Radius: inputs 10px, buttons 12px, cards 16px, forms and glass cards 20px, stats band 22px, pills fully round.
+• Shadow: cards 0 10px 30px rgba(40,50,120,.10); floating elements 0 20px 50px rgba(11,20,55,.35).
+• Spacing on an 8px grid. Public sections use 64px vertical padding and a 1250px maximum width. Dashboard content padding is 24px.
+1.6 Motion tokens
+• Durations: 150ms (hover colour), 300ms (card lift, sidebar items), 450ms (page content entrance), 700ms (scroll reveal), 9–14s (ambient background loops).
+• Easing: cubic-bezier(.2,.8,.2,1) for entrances, ease-in-out for loops.
+• Rule: one signature moment per page (home: the floating result card over the drifting hero). Everything else is quiet and responds to the user’s action.
+• Everything respects “reduced motion”: loops stop, reveals show instantly.
+1.6a Imagery style
+• Illustrations: flat semi-3D, using only the palette above, soft shadows, no outlines.
+• Photos: real classroom and campus scenes from Bangladesh, shown with a navy-to-indigo duotone overlay (#0B1437 at 55%) so text stays readable and photos match the theme.
+• Never use stock images with watermarks or foreign school uniforms. Every image has alt text and is under 200 KB (WebP).
+2. Shared components
+Component
+Look and behaviour
+Top navigation (public)
+Sticky, glass white at 85% with blur, 1px bottom border. Left: logo tile (gradient, 🎓) + name “একাডেমিয়া”. Right: হোম, আমাদের সম্পর্কে, প্রতিষ্ঠান নিবন্ধন, then a gradient “লগইন” button. Active link turns indigo with a 2px gradient underline that slides in. Collapses to a ☰ drawer under 860px.
+Primary button
+Brand gradient, size 200% so hover slides the gradient, lifts 2px, indigo glow shadow.
+Outline button
+Transparent, 1.5px currentColor border; fills with 12% tint on hover.
+Card
+Surface, 16px radius, border; on hover lifts 5px and border turns indigo.
+Form field
+10px radius, 1.5px border; focus: indigo border plus 3px indigo 20% ring. Label above, helper text below, error text in danger red with an icon.
+Pill
+Green (পাস, অনুমোদিত), amber (অপেক্ষমাণ, ড্রাফট), red (ফেল, বাতিল).
+Toast
+Bottom right, navy, slides up, disappears after 2.6s. Uses the same verb as the button that caused it (“নোটিশ প্রকাশ” gives “নোটিশ প্রকাশিত হয়েছে”).
+Table
+Rounded, tinted header, horizontal scroll inside its own container on small screens.
+Footer
+Navy. Four columns: logo and tagline, Product, Company, Contact. Bottom row with copyright and the theme toggle.
+3. Home page
+Goal: in ten seconds a principal understands that this replaces paper result sheets, and sees the next step (register or open the demo).
+3.1 Hero (first screen, full width)
+• Background: Hero gradient, animated drift. Two blurred colour blobs (violet top-right, teal bottom-left, 70px blur, 50% opacity) float slowly. A faint dotted grid at 6% opacity sits behind the text.
+• Left column: H1 “পুরো প্রতিষ্ঠানের পরীক্ষা ও ফলাফল, এক জায়গায়”; paragraph “নম্বর এন্ট্রি থেকে মার্কশিট পর্যন্ত — অধ্যক্ষ, শিক্ষক, শিক্ষার্থী ও অভিভাবক সবার জন্য আলাদা ড্যাশবোর্ড।”; two buttons: “আপনার প্রতিষ্ঠান নিবন্ধন করুন” (gradient) and “ডেমো ড্যাশবোর্ড দেখুন” (outline white).
+• Right column: floating glass result card titled “বার্ষিক পরীক্ষা ২০২৬ — নবম, ক শাখা”, rows for Bangla (১ম+২য় পত্র) A+, English (১ম+২য় পত্র) A, Maths A+, 4th subject bonus +১.০০, and a large amber “GPA 5.00”.
+• Image: none needed; the live card is the image. Optional: a duotone photo of students at 15% opacity under the gradient.
+• Animation: headline, paragraph and buttons slide up in sequence (0s, 0.15s, 0.3s). The card fades in at 0.4s, then bobs up and down 12px every 6s. Page background gradient drifts every 14s.
+3.2 Trust strip
+• Thin row under the hero on Cloud background: “স্কুল · কলেজ · মাদ্রাসা” with three small line icons, and a sentence “শিক্ষাবোর্ডের গ্রেডিং স্কেল অনুযায়ী প্রস্তুত”.
+• No gradient, no animation, so the eye rests after the hero.
+3.3 Features grid (six cards)
+• Heading: “সবকিছু যা একটি প্রতিষ্ঠানের দরকার”. Sub-heading: “ছয়টি মূল সুবিধা, একটি প্ল্যাটফর্মে।”
+• Layout: auto-fit grid, minimum 230px per card, 3 columns on desktop, 2 on tablet, 1 on phone.
+• Cards (icon tile, title, one line): 📝 পরীক্ষা ও কাস্টম নম্বর বণ্টন; 🧮 স্বয়ংক্রিয় ট্যাবুলেশন ও GPA; 🪪 প্রবেশপত্র ও মার্কশিট; 📎 অ্যাসাইনমেন্ট; 🗓️ বহু শিক্ষাবর্ষ; 🛡️ অডিট ও নিরাপত্তা.
+• Background: Cloud with one very light indigo radial glow behind the grid.
+• Animation: cards fade up when scrolled into view, 80ms apart; hover lifts and indigo border.
+3.4 How it works (this is a real sequence, so numbered)
+Four steps in a horizontal line with a gradient connector that draws itself left to right on scroll.
+1.  প্রতিষ্ঠান নিবন্ধন: register and wait for approval.
+2.  কাঠামো তৈরি: classes, sections, subjects, teachers, students.
+3.  পরীক্ষা ও নম্বর: create the exam, teachers enter marks, principal approves.
+4.  ফলাফল প্রকাশ: publish by section; students download marksheets.
+Each step has a gradient circle with an icon (🏫 📚 ✍️ 📣), a title and one sentence. Background: white surface band.
+3.5 Dashboard showcase (tabs)
+• Four tabs: সুপার এডমিন, অধ্যক্ষ, শিক্ষক, শিক্ষার্থী/অভিভাবক. The active tab has the brand gradient underline.
+• Each tab shows a framed screenshot or live mock of that dashboard on the left (browser-window frame, 20px radius, large soft shadow) and a checklist of four features on the right with teal ticks.
+• Background: Midnight Navy band with the Sidebar gradient, white text.
+• Animation: switching tabs cross-fades the screenshot (300ms) and slides the checklist from the right.
+3.6 Result preview section
+• Left: text “নির্ভুল ফলাফল, সমন্বিত বিষয় ও ৪র্থ বিষয়সহ” with three bullet benefits (১ম+২য় পত্র একত্রে, শাখাভিত্তিক প্রকাশ, অফিসিয়াল মার্কশিট PDF).
+• Right: a tilted marksheet illustration (3° rotation) on a soft teal-to-indigo blob; the “GPA 5.00” and “উত্তীর্ণ” seal use the Warm accent gradient.
+• Animation: marksheet straightens from 8° to 3° and fades in on scroll.
+3.7 Stats band
+• Full-width rounded band, Brand gradient, white text. Four numbers: 120+ প্রতিষ্ঠান, 48,000+ শিক্ষার্থী, 3,200+ শিক্ষক, 900+ প্রকাশিত পরীক্ষা.
+• Numbers count up from 0 once when the band enters the screen (about 1 second).
+• Replace with real numbers before launch; never show invented figures publicly.
+3.8 Questions and answers
+• Six accordion items (cost, data safety, 4th subject rules, bulk student import, multiple years, parent access). Chevron rotates 180° on open; answer height animates over 300ms.
+• Background: Cloud.
+3.9 Final call to action
+• Centred headline “আজই আপনার প্রতিষ্ঠানের ফলাফল ডিজিটাল করুন”, one gradient button “প্রতিষ্ঠান নিবন্ধন করুন”, and a text link “ডেমো দেখুন”.
+• Background: Hero gradient with the two blobs again, so the page ends the way it began. A single Warm accent line under the headline.
+3.10 Footer
+Navy background. Links: হোম, আমাদের সম্পর্কে, নিবন্ধন, লগইন; contact email and phone; copyright. No animation.
+4. About us page
+Section
+Content
+Visual treatment
+Page header
+Title “আমাদের সম্পর্কে”, subtitle “শিক্ষা প্রতিষ্ঠানের ফলাফল প্রক্রিয়াকে সহজ ও নির্ভুল করাই আমাদের কাজ।”
+Hero gradient, 240px tall, blobs, breadcrumb হোম / আমাদের সম্পর্কে
+Story
+Why the platform exists: paper tabulation errors, delays, 4th-subject confusion
+Two columns: text left, duotone classroom photo right (16:10, 20px radius) with an indigo offset frame
+Mission, Vision, Values
+Three cards: 🎯 লক্ষ্য, 👁️ দৃষ্টিভঙ্গি, 🔒 নিরাপত্তা
+Standard card; icon tiles with Brand gradient
+What we support
+Grading scales, CQ/MCQ/Practical rules, combined papers, 4th subject
+Two-column checklist on white band
+Team
+4 to 6 people: photo circle (96px) with gradient ring, name, role
+Ring rotates slowly on hover
+Contact
+Email, phone, address, simple message form
+Form uses standard fields; success toast
+Animation: header text slides up once; cards fade up on scroll; nothing loops except the header blobs.
+5. Login page
+• Layout: split screen. Left half (hidden under 860px): Hero gradient with logo, the line “আপনার ড্যাশবোর্ডে ফিরে আসুন”, and three short benefit lines with tick icons; floating blobs. Right half: centred form card (max 480px, 20px radius, shadow) on Cloud.
+• Fields: ইমেইল (✉️ left icon), পাসওয়ার্ড (🔒 left icon, 👁️ show/hide on right), “মনে রাখুন” checkbox, “পাসওয়ার্ড ভুলে গেছেন?” link.
+• Role handling: in production the role comes from the account. The demo shows four role radio cards (সুপার এডমিন, অধ্যক্ষ, শিক্ষক, শিক্ষার্থী/অভিভাবক); the selected one gets a soft indigo tint and indigo border.
+• Button: full-width gradient “ড্যাশবোর্ডে প্রবেশ করুন”. Below it: “নতুন প্রতিষ্ঠান? নিবন্ধন করুন”.
+• Errors: wrong password shows a red message under the field: “ইমেইল বা পাসওয়ার্ড মিলছে না। আবার চেষ্টা করুন।” and the card shakes 6px twice.
+• Success: button shows a small spinner for 600ms, then the dashboard slides in.
+6. Register institution page
+• Layout: header band in Hero gradient (title “প্রতিষ্ঠান নিবন্ধন”, subtitle “আবেদন জমা দিন। সুপার এডমিন যাচাই করে অনুমোদন দেবেন।”). Below it a 3-step form card overlapping the header by 60px.
+• Step 1 – প্রতিষ্ঠান: name, type (স্কুল / কলেজ / মাদ্রাসা), EIIN, address, district, logo upload (drag area with dashed indigo border).
+• Step 2 – অধ্যক্ষ: principal name, phone, email, password with strength bar (red, amber, green gradient).
+• Step 3 – নিশ্চিত করুন: summary of entries, terms checkbox, button “আবেদন জমা দিন”.
+• Step indicator: three circles joined by a line; the line fills with the Brand gradient as steps complete.
+• After submit: confetti-free confirmation card with a teal tick that draws itself, text “আবেদন জমা হয়েছে”, and the status pill “অপেক্ষমাণ”. Explain: the principal receives an email after approval.
+• Side panel (desktop): “নিবন্ধনের পর যা পাবেন” checklist: ড্যাশবোর্ড, শিক্ষক অ্যাকাউন্ট, শিক্ষার্থী ইমপোর্ট, প্রথম পরীক্ষা তৈরি.
+7. Dashboard shell (shared by all four roles)
+Area
+Description
+Left sidebar
+Sidebar gradient, 272px wide. Top: logo tile and name. Middle: role menu, first item always “ওয়েবসাইট হোমপেজ” (🌐). Bottom: logout (🚪). Items are 44px tall, 11px radius, icon plus label.
+Collapsed state
+The ☰ button shrinks the sidebar to 76px: icons only, labels fade out, hover shows a tooltip with the label. The choice is remembered for the session. Under 860px the sidebar becomes a slide-in drawer over a dark overlay.
+Active item
+Brand gradient fill, white text, soft shadow. Hover on other items: 10% white tint and a 3px nudge to the right.
+Top bar
+Sticky, white surface, bottom border. Left: ☰ and the page title. Centre/right: academic year switcher (principal and teacher only), theme toggle (🌓), role pill.
+Academic year bar
+Dropdown listing 2025, 2026 and any added year, plus “+ নতুন শিক্ষাবর্ষ যোগ করুন”. The add dialog has a checkbox “বর্তমান শিক্ষাবর্ষের শ্রেণি, শাখা, বিষয় ও শিক্ষক বণ্টন কপি করুন” (on by default). A year with no students or exams shows a delete option. Changing the year reloads every page below with a 300ms fade.
+Content area
+Cloud background, 24px padding. Page title is in the top bar, so the content starts directly with the main component. On open the content fades up 20px over 450ms.
+Empty states
+Always say what to do: “কোনো নোটিশ নেই। উপরে প্রথম নোটিশ লিখুন।” with a small line illustration in indigo.
+8. Super admin dashboard (সুপার এডমিন)
+Who: the owner of the whole platform. Accent: indigo. Menu order: Homepage, Admin dashboard, Notice board, Audit log.
+8.1 Admin dashboard: institutions and users
+• Stat cards (top row, four): total registered institutions 🏫, active ✅, pending applications ⏳ (amber tile), total students 🎓 and total users 👥. Numbers count up on load. The pending card pulses softly with an amber dot when above zero.
+• Registration review table: columns প্রতিষ্ঠান, ধরন, জেলা, আবেদনের তারিখ, স্ট্যাটাস pill, actions. Buttons: অনুমোদন (gradient), স্থগিত (outline), বাতিল (red outline). Each action asks for confirmation in a small modal; the row’s pill changes colour with a 300ms cross-fade.
+• Institution switcher: a dropdown plus “প্রতিষ্ঠানে প্রবেশ করুন”; once inside, a navy banner at the top of the page shows “আপনি আছেন: <প্রতিষ্ঠান>” with a button to leave.
+• Add institution: button opens a modal with the registration fields.
+• Delete institution: red outline button, modal requires typing the institution name to confirm.
+• User and role management: tabbed table (অধ্যক্ষ, শিক্ষক, শিক্ষার্থী, অভিভাবক) with search, role pill, email, “পাসওয়ার্ড রিসেট” and মুছুন. Passwords are never displayed; only a reset action is offered.
+8.2 Notice board
+Compose box (title, body, audience) with a gradient “প্রকাশ করুন” button. Below it, notice cards with an 📢 tile, title, date and a delete button. New notices slide in at the top.
+8.3 Audit and security log
+Filter bar (user, action type, date range) above a dense table: time, user, role, action (লগইন, পরীক্ষা তৈরি, নম্বর এন্ট্রি, নম্বর পরিবর্তন), details. Rows for changes to marks use an amber left border. Log is read-only; export as CSV.
+9. Principal / institution admin dashboard (অধ্যক্ষ)
+Who: principal or head teacher. Accent: indigo to teal. Menu has eleven items; the academic year bar is always visible.
+9.1 Overview (school control)
+• Live summary cards: classes and sections 📚, subjects, students 🎓, teachers 👩‍🏫, running and published exams 📝.
+• Quick action cards: seven large cards (classes and subjects, teacher assignment, student admission, create exam, marks entry, result approval, tabulation). Each has a gradient icon tile and a short line; hover lifts the card and the tile rotates 6°.
+• Exam progress tracker: list of exams, each with a progress bar (Brand gradient fill) showing subjects with marks submitted out of total, and a pill (চলমান amber, প্রকাশিত green). Bars animate from 0 on load.
+9.2 Classes, sections and subjects
+• Left panel: class list (ষষ্ঠ, সপ্তম, নবম, দশম) with code, year, class teacher; add, edit, delete. Sections appear as chips (ক, খ, গ, বিজ্ঞান, মানবিক, ব্যবসায় শিক্ষা).
+• Right panel: class and section filters above the subject table. Add-subject dialog fields: name, code, scope (all sections or a chosen section), type (আবশ্যিক or ৪র্থ বিষয়).
+• Pass rule block: two radio cards. “আলাদা পাস” reveals three rows (CQ, MCQ, ব্যবহারিক) with full marks and pass marks and a “৩৩% অটো” button. “একত্রে মোট পাস” sets component pass marks to 0 and shows only the total.
+9.3 Teachers and assignments
+• Teacher table with name, email, phone and assigned load. “নতুন শিক্ষক” opens a wide modal: account fields (name, email, phone, password) and an assignment builder where each row is class + section (or all) + subject, with “+ আরও যোগ করুন” and “নতুন বিষয় তৈরি করুন” inline.
+• Clicking a teacher opens a side drawer listing assignments as chips that can be removed. Delete account is in the drawer footer.
+9.4 Students
+• Admission form (modal, two columns): name, roll, student ID, class, section, year, gender, date of birth, father, mother, guardian mobile, address, 4th subject, login email and password (creates the student account).
+• Bulk import: drag area for CSV or Excel, link “স্যাম্পল CSV ডাউনলোড”, preview of the first rows with errors highlighted in red before confirming.
+• List: class and section filters, search by name, roll or ID, edit and delete per row.
+9.5 Exam management
+• Exam form: name, year, default class, section (all or one), start and end date, marks deadline.
+• Mark distribution engine: a stack of rule cards. Each card: class, section, subject, then three toggles (CQ, MCQ, Practical) with full and pass marks, or total-only pass. Preset chips: সাধারণ ১০০ (70+30), ব্যবহারিক ১০০ (50+25+25), ৫০ (35+15), ৫০ ব্যবহারিক, শুধু লিখিত ১০০, শুধু MCQ ১০০, ৩৩% অটো. Clone and delete icons on each card.
+• Subject combination: cards for combined papers (বাংলা ১ম+২য়, ইংরেজি ১ম+২য়, custom). Aggregation mode toggle (মোট যোগফল or গড়), pass rule select (combined total, combined components, each paper separately), and a checkbox for ৪র্থ বিষয়.
+• Admit cards: appear automatically after saving. Toolbar: “সকল প্রবেশপত্র PDF” and print. Each card has its own ডাউনলোড and প্রিন্ট buttons. Card design: A4 portrait, navy header band with logo and institution name, student table, subject and marks table, signature line.
+• Publish toggles: per section switch (ক, খ, whole class) with a green “প্রকাশিত” state. Delete exam uses a confirmation modal.
+9.6 Marks entry and drafts
+• Selectors for exam, class, section, subject in a sticky row.
+• Table: roll, name, CQ, MCQ, Practical, total, grade (with point), status. Fields not in the distribution are locked with a hatched grey background. Entering more than the maximum clears the field and shows a toast. Total, grade and pass or fail update as you type.
+• Footer actions: “খসড়া সংরক্ষণ” (outline) and “অনুমোদনের জন্য জমা দিন” (gradient).
+9.7 Result approval and publishing
+Matrix of subjects against status (প্রস্তুত count, ড্রাফট, জমা হয়েছে, অনুমোদিত). Each subject row has “অনুমোদন করুন”. Above it a publish control for the whole exam or one section, with an unpublish option, and a button to open the tabulation sheet.
+9.8 Tabulation sheet
+• Selectors for exam, class and section tabs (সকল, ক, খ).
+• View switch: বিস্তারিত (CQ, MCQ, PR, total, grade per subject) and সংক্ষিপ্ত (total, grade, C/M/P breakdown, combined papers as 101: 75 + 102: 80).
+• Final columns: GPA (including the 4th subject bonus above 2.00), overall grade, উত্তীর্ণ or অনুত্তীর্ণ pill. Failed rows have a faint red tint.
+• Actions: দেখুন (single official marksheet dialog with PDF and print), বাল্ক অফিসিয়াল মার্কশিট (preview, multi-page A4 PDF, print), Excel and CSV export, print sheet.
+• Marksheet design: A4 portrait, navy top band, logo left, institution and EIIN centred, student block, subject table, GPA box with the Warm accent seal, signature row for class teacher and principal.
+9.9 Notice board
+Same component as the super admin’s, scoped to the institution. Audience select: teachers, students, parents.
+9.10 Settings
+Four stacked cards: প্রতিষ্ঠানের তথ্য (name, logo, address, EIIN, principal, contact), সংখ্যা ফরম্যাট (Bangla or English switch), গ্রেডিং স্কেল (editable table A+ to F with range and point), and ৪র্থ বিষয়ের নিয়ম (base pass point 2.00, maximum bonus 3.00, and the choice of failing the exam or zeroing the bonus when the 4th subject is failed). A sticky save bar appears when anything changes.
+9.11 Audit log
+Same table as the super admin’s, limited to this institution.
+10. Teacher dashboard (শিক্ষক)
+Who: subject and class teachers. Accent: teal. Menu: Homepage, Classes and sections, Assignments, Marks entry, Notice board. Academic year bar in the top bar.
+• Classes and sections: cards for each assigned class + section + subject with student count and a teal progress ring for marks submitted. Below, the student list for the chosen class (roll, ID, 4th subject, guardian info). A small “+ শিক্ষার্থী যোগ করুন” button for the teacher’s own classes.
+• Assignments and homework: left list of assignments with due date pills; “নতুন অ্যাসাইনমেন্ট” form (title, description, full marks, due date, class and section). Right panel: submissions list; selecting one shows the student’s answer, a marks field and a feedback box, and “মূল্যায়ন করুন”.
+• Marks entry: identical to 9.6 but the selectors only list the teacher’s own class, section and subject; everything else is hidden.
+• Notice board: read all notices, publish to students.
+11. Student and parent dashboard (শিক্ষার্থী ও অভিভাবক)
+Who: students and parents. Accent: amber highlights on a calm layout. Menu: Homepage, My results and marksheets (parents: children’s results), My assignments, Notice board.
+• Profile card (top): gradient avatar ring, name, roll, ID, class, section, year, parents, login email. Parents with several children see a pill switcher for each child.
+• Admit cards: list of running and upcoming exams with “প্রবেশপত্র দেখুন”, print and PDF.
+• Published results: one card per exam with GPA in a large amber number, letter grade, total marks and pass or fail pill. Expanding a card shows the subject table (CQ, MCQ, Practical, total, grade) including combined subjects, and “অফিসিয়াল মার্কশিট” for print or PDF. Results of unpublished sections never appear.
+• My assignments: cards with due date and full marks. “জমা দিন” opens a text box; after grading, marks and teacher feedback appear on the same card.
+• Notice board: read only.
+12. Animation catalogue
+Where
+Effect
+Timing
+Hero background
+Gradient drifts diagonally
+14s loop
+Hero blobs
+Slow float with slight scale
+9s loop, offset 4s
+Hero text and buttons
+Slide up 26px and fade
+0.9s, delays 0, 0.15s, 0.3s
+Hero result card
+Fade in, then bob 12px
+Entrance 1s, bob 6s
+Public sections
+Fade up 24px when 20% visible
+0.7s
+Stats numbers
+Count up from 0
+About 1s
+Primary button
+Gradient slides, lifts 2px, glow
+0.4s
+Cards
+Lift 5px, border indigo
+0.3s
+Sidebar collapse
+Width 272px to 76px, labels fade
+0.35s
+Sidebar item hover
+Nudge 3px, 10% tint
+0.25s
+Dashboard content
+Fade up 20px on every menu change
+0.45s
+Progress bars
+Grow from 0
+0.8s
+Toasts
+Slide up from bottom
+0.4s
+Form errors
+Two 6px shakes
+0.3s
+Success tick
+Stroke draws itself
+0.5s
+All of the above stop when the device asks for reduced motion.
+13. Image and background checklist
+Asset
+Where
+Size and format
+Treatment
+Logo mark and wordmark
+Navbar, sidebar, footer, marksheets
+SVG
+White on dark, gradient tile on light
+Hero dotted grid
+Home hero
+SVG pattern
+White at 6%
+Classroom photo
+About story
+1200×750 WebP
+Navy duotone, 20px radius
+Team portraits
+About
+400×400 WebP
+Circle with gradient ring
+Dashboard screenshots
+Home showcase
+1400×900 WebP, four images
+Browser frame
+Marksheet illustration
+Home result preview
+SVG
+Tilted 3°
+Empty-state illustrations
+Notices, students, assignments
+SVG, 200px
+Indigo and teal line art
+Admit card and marksheet templates
+Exams, tabulation
+A4 HTML to PDF
+Navy band, Warm accent seal
+14. Responsive and accessibility rules
+• Breakpoints: 860px (drawer sidebar, single-column hero) and 560px (one-column cards, full-width buttons).
+• Text contrast at least 4.5:1; white text only on navy, indigo or violet, never on amber or the light end of teal.
+• Visible amber focus ring on every control; every icon-only button has a label.
+• Status is never shown by colour alone: pills always carry text.
+• Tables scroll horizontally inside their own container; printed marksheets and admit cards ignore dark mode.

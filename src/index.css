@@ -1,0 +1,234 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --academia-navy: #0B1437;
+  --academia-indigo: #4F46E5;
+  --academia-violet: #7C3AED;
+  --academia-teal: #14B8A6;
+  --academia-amber: #F59E0B;
+  --academia-amber-light: #FCD34D;
+
+  --academia-bg: #F4F6FC;
+  --academia-surface: #FFFFFF;
+  --academia-ink: #111936;
+  --academia-slate: #5D6785;
+  --academia-border: #E2E6F3;
+  --academia-tint: rgba(79, 70, 229, 0.08);
+  --academia-hatched: repeating-linear-gradient(
+    -45deg,
+    #f1f5f9,
+    #f1f5f9 6px,
+    #e2e8f0 6px,
+    #e2e8f0 12px
+  );
+}
+
+.dark {
+  --academia-bg: #0B1020;
+  --academia-surface: #141B34;
+  --academia-ink: #E8ECFB;
+  --academia-slate: #98A2C7;
+  --academia-border: #262F52;
+  --academia-tint: rgba(79, 70, 229, 0.16);
+  --academia-hatched: repeating-linear-gradient(
+    -45deg,
+    #18203c,
+    #18203c 6px,
+    #232d52 6px,
+    #232d52 12px
+  );
+}
+
+@layer base {
+  html {
+    font-family: 'Hind Siliguri', system-ui, -apple-system, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--academia-bg);
+    color: var(--academia-ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+
+  /* Accessible amber keyboard focus ring */
+  *:focus-visible {
+    outline: 2.5px solid #F59E0B;
+    outline-offset: 2px;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hidden scrollbar utility for clean navigation sidebars */
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Gradients per SPEC.md §1.2 */
+.bg-brand-gradient {
+  background-image: linear-gradient(120deg, #4F46E5 0%, #7C3AED 45%, #14B8A6 100%);
+}
+
+.bg-brand-btn {
+  background-image: linear-gradient(120deg, #4F46E5 0%, #7C3AED 45%, #14B8A6 100%);
+  background-size: 200% auto;
+  transition: background-position 400ms cubic-bezier(.2,.8,.2,1), transform 250ms cubic-bezier(.2,.8,.2,1), box-shadow 250ms ease;
+}
+
+.bg-brand-btn:hover:not(:disabled) {
+  background-position: right center;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.35);
+}
+
+.bg-hero-gradient {
+  background-image: linear-gradient(135deg, #0B1437 0%, #2A1A73 55%, #0B6B73 100%);
+  background-size: 200% 200%;
+  animation: heroDrift 14s ease-in-out infinite;
+}
+
+.bg-sidebar-gradient {
+  background-image: linear-gradient(180deg, #0B1437 0%, #1B1A5C 60%, #0B4F5C 100%);
+}
+
+.bg-warm-gradient {
+  background-image: linear-gradient(90deg, #F59E0B 0%, #F97316 100%);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.dotted-grid-bg {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px);
+  background-size: 26px 26px;
+}
+
+.hatched-locked {
+  background: var(--academia-hatched);
+}
+
+.card-shadow {
+  box-shadow: 0 10px 30px rgba(40, 50, 120, 0.10);
+}
+
+.floating-shadow {
+  box-shadow: 0 20px 50px rgba(11, 20, 55, 0.35);
+}
+
+/* Keyframes */
+@keyframes heroDrift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes blobFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(18px, -22px, 0) scale(1.06);
+  }
+}
+
+@keyframes cardBob {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes shakeError {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-6px);
+  }
+  40%, 80% {
+    transform: translateX(6px);
+  }
+}
+
+.animate-blob {
+  animation: blobFloat 9s ease-in-out infinite;
+}
+
+.animate-blob-delayed {
+  animation: blobFloat 9s ease-in-out 4s infinite;
+}
+
+.animate-bob {
+  animation: cardBob 6s ease-in-out infinite;
+}
+
+.animate-shake {
+  animation: shakeError 0.3s ease-in-out;
+}
+
+/* Respect reduced motion everywhere */
+@media (prefers-reduced-motion: reduce) {
+  .bg-hero-gradient,
+  .animate-blob,
+  .animate-blob-delayed,
+  .animate-bob,
+  .animate-shake {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* A4 Print isolation — ignore dark mode on printed marksheets and admit cards */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111936 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #111936 !important;
+  }
+  .print-page-break {
+    page-break-after: always;
+    break-after: page;
+  }
+}
